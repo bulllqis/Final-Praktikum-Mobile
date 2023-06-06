@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.example.final_praktikum_mobile.Adapter.TvShowsAdapter;
 import com.example.final_praktikum_mobile.Api.ApiConfig;
 import com.example.final_praktikum_mobile.Database.DBHelper;
+import com.example.final_praktikum_mobile.MainActivity;
 import com.example.final_praktikum_mobile.Model.TvShowsModel;
 import com.example.final_praktikum_mobile.R;
 import com.example.final_praktikum_mobile.Response.TvShowsResponse;
@@ -66,6 +67,7 @@ public class TvShowsFragment extends Fragment {
         layoutManager = new GridLayoutManager(getActivity(), 2);
 
         handler = new Handler(Looper.getMainLooper());
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle("TV Shows");
         getData();
 
 
@@ -86,6 +88,7 @@ public class TvShowsFragment extends Fragment {
                     rv_tvShows.setVisibility(View.VISIBLE);
                     if (response.isSuccessful()){
                         if (response.body() != null){
+                            tvShows.clear();
                             tvShows.addAll(response.body().getTvShows());
                             TvShowsAdapter tvShowsAdapter = new TvShowsAdapter(getActivity(), tvShows);
                             rv_tvShows.setLayoutManager(layoutManager);

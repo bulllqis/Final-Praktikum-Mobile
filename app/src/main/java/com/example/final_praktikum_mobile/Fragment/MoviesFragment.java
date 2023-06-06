@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.example.final_praktikum_mobile.Adapter.MoviesAdapter;
 import com.example.final_praktikum_mobile.Api.ApiConfig;
 import com.example.final_praktikum_mobile.Database.DBHelper;
+import com.example.final_praktikum_mobile.MainActivity;
 import com.example.final_praktikum_mobile.Model.MovieModel;
 import com.example.final_praktikum_mobile.R;
 import com.example.final_praktikum_mobile.Response.MovieResponse;
@@ -67,6 +68,7 @@ public class MoviesFragment extends Fragment {
         layoutManager = new GridLayoutManager(getActivity(), 2);
 
         handler = new Handler(Looper.getMainLooper());
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle("Movies");
         getData();
 
 
@@ -88,6 +90,7 @@ public class MoviesFragment extends Fragment {
                     rv_movies.setVisibility(View.VISIBLE);
                     if (response.isSuccessful()){
                         if (response.body() != null){
+                            movies.clear();
                             movies.addAll(response.body().getMovies());
                             MoviesAdapter moviesAdapter = new MoviesAdapter(getActivity(), movies);
                             rv_movies.setLayoutManager(layoutManager);
