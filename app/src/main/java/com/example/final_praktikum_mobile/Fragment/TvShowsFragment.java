@@ -1,61 +1,49 @@
 package com.example.final_praktikum_mobile.Fragment;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.final_praktikum_mobile.Adapter.TvShowsAdapter;
+import com.example.final_praktikum_mobile.Api.ApiConfig;
+import com.example.final_praktikum_mobile.Model.TvShowsModel;
 import com.example.final_praktikum_mobile.R;
+import com.example.final_praktikum_mobile.Response.TvShowsResponse;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link TvShowsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class TvShowsFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private RecyclerView rv_tvShows;
+    private List<TvShowsModel> tvShows = new ArrayList<>();
+    private GridLayoutManager layoutManager;
+    private ProgressBar progressBar;
+    private TextView tv_internet;
+    private ImageView btn_retry;
+    private Handler handler;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public TvShowsFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment TvShowsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static TvShowsFragment newInstance(String param1, String param2) {
-        TvShowsFragment fragment = new TvShowsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,4 +51,87 @@ public class TvShowsFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_tv_shows, container, false);
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        progressBar = view.findViewById(R.id.progressBar);
+        tv_internet = view.findViewById(R.id.tvinternet);
+        btn_retry = view.findViewById(R.id.btn_retry);
+
+        rv_tvShows = view.findViewById(R.id.rv_tvShows);
+        rv_tvShows.setHasFixedSize(true);
+        layoutManager = new GridLayoutManager(getActivity(), 2);
+
+        handler = new Handler(Looper.getMainLooper());
+        getData();
+
+
+    }
+
+    private void getData() {
+        if(isNetworkAvailable()){
+            progressBar.setVisibility(View.VISIBLE);
+            rv_tvShows.setVisibility(View.GONE);
+            tv_internet.setVisibility(View.GONE);
+            btn_retry.setVisibility(View.GONE);
+
+            Call<TvShowsResponse> tvShow = ApiConfig.getApiService().getTvShows("2ee1c153c74e27879c557e354c5163c4", 1);
+            tvShow.enqueue(new Callback<TvShowsResponse>() {
+                @Override
+                public void onResponse(Call<TvShowsResponse> call, Response<TvShowsResponse> response) {
+                    progressBar.setVisibility(View.GONE);
+                    rv_tvShows.setVisibility(View.VISIBLE);
+                    if (response.isSuccessful()){
+                        if (response.body() != null){
+                            tvShows.addAll(response.body().getTvShows());
+                            TvShowsAdapter tvShowsAdapter = new TvShowsAdapter(getActivity(), tvShows);
+                            rv_tvShows.setLayoutManager(layoutManager);
+                            rv_tvShows.setAdapter(tvShowsAdapter);
+
+
+                        }
+
+                    }else {
+                        if (response.body() != null){
+                            Toast.makeText(getActivity(), "Gagal memuat Tv Show", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<TvShowsResponse> call, Throwable t) {
+                    Toast.makeText(getActivity(), "Gagal memuat Tv Show", Toast.LENGTH_SHORT).show();
+
+                }
+            });
+
+
+        }else {
+            handler.postDelayed(() -> showRetryButton(), 100);
+        }
+    }
+
+    private void showRetryButton() {
+        tv_internet.setVisibility(View.VISIBLE);
+        btn_retry.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
+
+        btn_retry.setOnClickListener(view -> {
+            tv_internet.setVisibility(View.GONE);
+            btn_retry.setVisibility(View.GONE);
+            getData();
+        });
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
+
+    }
+
+
 }
