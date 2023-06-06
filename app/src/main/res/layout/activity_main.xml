@@ -6,13 +6,97 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavBar"
         app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:id="@+id/bottomNavBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="horizontal"
+        android:background="@drawable/background">
+
+        <LinearLayout
+            android:id="@+id/layout_movies"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            >
+            <ImageButton
+                android:id="@+id/btn_movies"
+                android:layout_width="40dp"
+                android:layout_gravity="center"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:background="#00000000"
+                android:src="@drawable/baseline_movie_24"/>
+
+            <TextView
+                android:id="@+id/tv_movies"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Movies"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/black"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/layout_tvShows"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            >
+            <ImageButton
+                android:id="@+id/btn_tvShows"
+                android:layout_width="40dp"
+                android:layout_gravity="center"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:background="#00000000"
+                android:src="@drawable/baseline_tv_24"/>
+            <TextView
+                android:id="@+id/tv_shows"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TV Shows"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/black"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/layout_favorites"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            >
+            <ImageButton
+                android:id="@+id/btn_favorites"
+                android:layout_width="40dp"
+                android:layout_gravity="center"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:background="#00000000"
+                android:src="@drawable/baseline_favorite_border_24"/>
+
+            <TextView
+                android:id="@+id/tv_favorites"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Favorites"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/black"/>
+        </LinearLayout>
+        
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
