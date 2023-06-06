@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.example.final_praktikum_mobile.Adapter.TvShowsAdapter;
 import com.example.final_praktikum_mobile.Api.ApiConfig;
+import com.example.final_praktikum_mobile.Database.DBHelper;
 import com.example.final_praktikum_mobile.Model.TvShowsModel;
 import com.example.final_praktikum_mobile.R;
 import com.example.final_praktikum_mobile.Response.TvShowsResponse;
@@ -90,6 +91,22 @@ public class TvShowsFragment extends Fragment {
                             rv_tvShows.setLayoutManager(layoutManager);
                             rv_tvShows.setAdapter(tvShowsAdapter);
 
+                            DBHelper dbHelper = new DBHelper(getContext());
+                            for (TvShowsModel tvShow : tvShows) {
+                                TvShowsModel tvShowsModel = new TvShowsModel(
+                                        tvShow.getId(),
+                                        tvShow.getName(),
+                                        tvShow.getBackdrop_image(),
+                                        tvShow.getPoster_image(),
+                                        tvShow.getFirst_air_date(),
+                                        tvShow.getRating(),
+                                        tvShow.getSynopsis(),
+                                        tvShow.getLanguage(),
+                                        tvShow.getPopularity()
+
+                                );
+                                dbHelper.insertTvShow(tvShowsModel);
+                            }
 
                         }
 

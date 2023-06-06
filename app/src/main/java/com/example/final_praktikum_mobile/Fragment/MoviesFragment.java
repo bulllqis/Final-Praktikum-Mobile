@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.example.final_praktikum_mobile.Adapter.MoviesAdapter;
 import com.example.final_praktikum_mobile.Api.ApiConfig;
+import com.example.final_praktikum_mobile.Database.DBHelper;
 import com.example.final_praktikum_mobile.Model.MovieModel;
 import com.example.final_praktikum_mobile.R;
 import com.example.final_praktikum_mobile.Response.MovieResponse;
@@ -91,7 +92,22 @@ public class MoviesFragment extends Fragment {
                             MoviesAdapter moviesAdapter = new MoviesAdapter(getActivity(), movies);
                             rv_movies.setLayoutManager(layoutManager);
                             rv_movies.setAdapter(moviesAdapter);
-                            
+
+                            DBHelper dbHelper = new DBHelper(getContext());
+                            for (MovieModel movie : movies) {
+                                MovieModel movieModel = new MovieModel(
+                                        movie.getId(),
+                                        movie.getTitle(),
+                                        movie.getBackdrop_image(),
+                                        movie.getPoster_image(),
+                                        movie.getRelease_date(),
+                                        movie.getRating(),
+                                        movie.getSynopsis(),
+                                        movie.getLanguage(),
+                                        movie.getPopularity()
+                                );
+                                dbHelper.insertMovie(movieModel);
+                            }
                         }
 
                     }else {
