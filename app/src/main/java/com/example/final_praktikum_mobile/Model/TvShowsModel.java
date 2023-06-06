@@ -61,7 +61,7 @@ public class TvShowsModel {
     public String getPoster_image() {
         return poster_image;
     }
-    
+
     public Float getRating() {
         return rating;
     }
