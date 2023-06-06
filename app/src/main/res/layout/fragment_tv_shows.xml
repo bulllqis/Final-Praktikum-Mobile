@@ -1,14 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragment.TvShowsFragment">
+    tools:context=".Fragment.TvShowsFragment"
+    android:orientation="vertical"
+    android:background="#B99DBFE3">
 
-    <!-- TODO: Update blank fragment layout -->
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        />
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/tvinternet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Please check your internet connection"
+        android:textSize="18sp"
+        android:textColor="@color/black"
 
-</FrameLayout>
+        />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_tvShows"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/item_rv"
+            android:nestedScrollingEnabled="true"
+            />
+
+    </androidx.core.widget.NestedScrollView>
+
+    <ImageView
+        android:id="@+id/btn_retry"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/tvinternet"
+        android:layout_centerInParent="true"
+        android:backgroundTint="#00000000"
+        android:src="@drawable/baseline_refresh_24"/>
+
+
+</RelativeLayout>
