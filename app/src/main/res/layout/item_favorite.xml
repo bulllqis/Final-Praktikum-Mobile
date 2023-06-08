@@ -3,10 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_weight="1"
-    android:layout_height="wrap_content"
+    android:layout_height="80dp"
     android:layout_marginTop="10dp"
-    android:backgroundTint="#BA188FDF"
-    android:elevation="6dp"
+    android:backgroundTint="#188FDF"
     app:cardCornerRadius="10dp">
 
     <RelativeLayout
@@ -14,8 +13,8 @@
         android:layout_height="match_parent">
         <ImageView
             android:id="@+id/iv_poster"
-            android:layout_width="100dp"
-            android:layout_height="110dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_marginRight="10dp"
             android:scaleType="centerCrop"/>
         <TextView
@@ -23,10 +22,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="judul"
+            android:layout_marginRight="50dp"
             android:paddingHorizontal="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="5dp"
             android:textColor="@color/black"
-            android:textSize="20sp"
+            android:textSize="18sp"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:textStyle="bold"
             android:layout_toRightOf="@id/iv_poster"/>
         <TextView
@@ -36,17 +38,17 @@
             android:text="release date"
             android:paddingHorizontal="10dp"
             android:textColor="@color/black"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="5dp"
             android:layout_toRightOf="@id/iv_poster"
             android:layout_below="@id/tv_title"/>
 
         <ImageView
             android:id="@+id/iv_movieOrTv"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:paddingHorizontal="10dp"
-            android:layout_toRightOf="@id/iv_poster"
-            android:layout_below="@id/tv_releaseDate"/>
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"/>
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>
