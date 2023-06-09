@@ -31,9 +31,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
         this.favoritesList = favoritesList;
         this.resultLauncher = resultLauncher;
     }
-    private void launchDetailActivity(Intent intent) {
-        resultLauncher.launch(intent);
-    }
+
     @NonNull
     @Override
     public FavoritesAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -76,8 +74,6 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
             });
         }
 
-
-
     }
 
     @Override
@@ -97,9 +93,6 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
             iv_movieOrTv = itemView.findViewById(R.id.iv_movieOrTv);
         }
     }
-
-
-
 
 }
 

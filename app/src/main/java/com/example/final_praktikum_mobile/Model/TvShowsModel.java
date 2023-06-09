@@ -62,6 +62,7 @@ public class TvShowsModel {
         return poster_image;
     }
 
+
     public Float getRating() {
         return rating;
     }

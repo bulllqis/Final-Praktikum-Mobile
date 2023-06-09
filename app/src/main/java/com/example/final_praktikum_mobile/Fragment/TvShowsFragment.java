@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,6 +46,8 @@ public class TvShowsFragment extends Fragment {
     private TextView tv_internet;
     private ImageView btn_retry;
     private Handler handler;
+    private SearchView searchView;
+    TvShowsAdapter tvShowsAdapter;
 
 
     @Override
@@ -61,15 +64,43 @@ public class TvShowsFragment extends Fragment {
         progressBar = view.findViewById(R.id.progressBar);
         tv_internet = view.findViewById(R.id.tvinternet);
         btn_retry = view.findViewById(R.id.btn_retry);
-
+        searchView = view.findViewById(R.id.searchView);
         rv_tvShows = view.findViewById(R.id.rv_tvShows);
+
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle("TV Shows");
+
         rv_tvShows.setHasFixedSize(true);
         layoutManager = new GridLayoutManager(getActivity(), 2);
 
         handler = new Handler(Looper.getMainLooper());
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle("TV Shows");
         getData();
 
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                DBHelper dbHelper = new DBHelper(getContext());
+                if (query.isEmpty()) {
+                    getData();
+
+
+                } else {
+                    List<TvShowsModel> searchTvShow = dbHelper.searchTvShowByName(query);
+
+
+                    tvShowsAdapter = new TvShowsAdapter(getActivity(), searchTvShow);
+                    rv_tvShows.setLayoutManager(layoutManager);
+                    rv_tvShows.setAdapter(tvShowsAdapter);
+
+
+                }
+                return true;
+            }
+        });
 
     }
 
@@ -79,6 +110,7 @@ public class TvShowsFragment extends Fragment {
             rv_tvShows.setVisibility(View.GONE);
             tv_internet.setVisibility(View.GONE);
             btn_retry.setVisibility(View.GONE);
+            searchView.setVisibility(View.GONE);
 
             Call<TvShowsResponse> tvShow = ApiConfig.getApiService().getTvShows("2ee1c153c74e27879c557e354c5163c4", 1);
             tvShow.enqueue(new Callback<TvShowsResponse>() {
@@ -86,11 +118,12 @@ public class TvShowsFragment extends Fragment {
                 public void onResponse(Call<TvShowsResponse> call, Response<TvShowsResponse> response) {
                     progressBar.setVisibility(View.GONE);
                     rv_tvShows.setVisibility(View.VISIBLE);
+                    searchView.setVisibility(View.VISIBLE);
                     if (response.isSuccessful()){
                         if (response.body() != null){
                             tvShows.clear();
                             tvShows.addAll(response.body().getTvShows());
-                            TvShowsAdapter tvShowsAdapter = new TvShowsAdapter(getActivity(), tvShows);
+                            tvShowsAdapter = new TvShowsAdapter(getActivity(), tvShows);
                             rv_tvShows.setLayoutManager(layoutManager);
                             rv_tvShows.setAdapter(tvShowsAdapter);
 
@@ -138,6 +171,7 @@ public class TvShowsFragment extends Fragment {
         tv_internet.setVisibility(View.VISIBLE);
         btn_retry.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.GONE);
+        searchView.setVisibility(View.GONE);
 
         btn_retry.setOnClickListener(view -> {
             tv_internet.setVisibility(View.GONE);
@@ -152,6 +186,5 @@ public class TvShowsFragment extends Fragment {
         return networkInfo != null && networkInfo.isConnected();
 
     }
-
 
 }

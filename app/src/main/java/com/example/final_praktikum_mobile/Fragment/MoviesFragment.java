@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,7 +39,6 @@ import retrofit2.Response;
 
 
 public class MoviesFragment extends Fragment {
-
     private RecyclerView rv_movies;
     private List<MovieModel> movies = new ArrayList<>();
     private GridLayoutManager layoutManager;
@@ -46,6 +46,8 @@ public class MoviesFragment extends Fragment {
     private TextView tv_internet;
     private ImageView btn_retry;
     private Handler handler;
+    MoviesAdapter moviesAdapter;
+    private SearchView searchView;
 
 
     @Override
@@ -62,15 +64,42 @@ public class MoviesFragment extends Fragment {
         progressBar = view.findViewById(R.id.progressBar);
         tv_internet = view.findViewById(R.id.tvinternet);
         btn_retry = view.findViewById(R.id.btn_retry);
-
+        searchView = view.findViewById(R.id.searchView);
         rv_movies = view.findViewById(R.id.rv_movies);
+
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle("Movies");
+
         rv_movies.setHasFixedSize(true);
         layoutManager = new GridLayoutManager(getActivity(), 2);
 
         handler = new Handler(Looper.getMainLooper());
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle("Movies");
         getData();
 
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                DBHelper dbHelper = new DBHelper(getContext());
+                if (query.isEmpty()) {
+                    getData();
+
+
+                } else {
+                    List<MovieModel> searchMovie = dbHelper.searchMoviesByTitle(query);
+
+                    moviesAdapter = new MoviesAdapter(getActivity(), searchMovie);
+                    rv_movies.setLayoutManager(layoutManager);
+                    rv_movies.setAdapter(moviesAdapter);
+
+
+                }
+                return true;
+            }
+        });
 
     }
 
@@ -80,6 +109,7 @@ public class MoviesFragment extends Fragment {
             rv_movies.setVisibility(View.GONE);
             tv_internet.setVisibility(View.GONE);
             btn_retry.setVisibility(View.GONE);
+            searchView.setVisibility(View.GONE);
 
 
             Call<MovieResponse> movie = ApiConfig.getApiService().getMovies("2ee1c153c74e27879c557e354c5163c4", 1);
@@ -88,11 +118,12 @@ public class MoviesFragment extends Fragment {
                 public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
                     progressBar.setVisibility(View.GONE);
                     rv_movies.setVisibility(View.VISIBLE);
+                    searchView.setVisibility(View.VISIBLE);
                     if (response.isSuccessful()){
                         if (response.body() != null){
                             movies.clear();
                             movies.addAll(response.body().getMovies());
-                            MoviesAdapter moviesAdapter = new MoviesAdapter(getActivity(), movies);
+                            moviesAdapter = new MoviesAdapter(getActivity(), movies);
                             rv_movies.setLayoutManager(layoutManager);
                             rv_movies.setAdapter(moviesAdapter);
 
@@ -138,6 +169,7 @@ public class MoviesFragment extends Fragment {
         tv_internet.setVisibility(View.VISIBLE);
         btn_retry.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.GONE);
+        searchView.setVisibility(View.GONE);
 
         btn_retry.setOnClickListener(view -> {
             tv_internet.setVisibility(View.GONE);
