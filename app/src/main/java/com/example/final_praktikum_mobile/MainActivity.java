@@ -15,12 +15,9 @@ import com.example.final_praktikum_mobile.Fragment.TvShowsFragment;
 public class MainActivity extends AppCompatActivity {
     private ImageButton btn_movies, btn_tvShows, btn_favorites;
     private TextView tv_movies, tv_shows, tv_favorites;
-    private LinearLayout movies, tvShows, favorites;
-
     private MoviesFragment moviesFragment;
     private TvShowsFragment tvShowsFragment;
     private FavoritesFragment favoritesFragment;
-
     private int defaultTextColor;
     private int selectedTextColor;
 
@@ -37,9 +34,6 @@ public class MainActivity extends AppCompatActivity {
         tv_shows = findViewById(R.id.tv_shows);
         tv_favorites = findViewById(R.id.tv_favorites);
 
-        movies = findViewById(R.id.layout_movies);
-        tvShows = findViewById(R.id.layout_tvShows);
-        favorites = findViewById(R.id.layout_favorites);
 
         moviesFragment = new MoviesFragment();
         tvShowsFragment = new TvShowsFragment();

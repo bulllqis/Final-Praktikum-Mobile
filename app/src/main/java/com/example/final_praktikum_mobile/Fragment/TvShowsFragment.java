@@ -73,6 +73,11 @@ public class TvShowsFragment extends Fragment {
         layoutManager = new GridLayoutManager(getActivity(), 2);
 
         handler = new Handler(Looper.getMainLooper());
+        rv_tvShows.setVisibility(View.GONE);
+        searchView.setVisibility(View.GONE);
+        tv_internet.setVisibility(View.GONE);
+        btn_retry.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
         getData();
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -85,19 +90,15 @@ public class TvShowsFragment extends Fragment {
             public boolean onQueryTextChange(String query) {
                 DBHelper dbHelper = new DBHelper(getContext());
                 if (query.isEmpty()) {
-                    getData();
-
+                    tvShowsAdapter = new TvShowsAdapter(getActivity(), tvShows);
 
                 } else {
                     List<TvShowsModel> searchTvShow = dbHelper.searchTvShowByName(query);
 
-
                     tvShowsAdapter = new TvShowsAdapter(getActivity(), searchTvShow);
-                    rv_tvShows.setLayoutManager(layoutManager);
-                    rv_tvShows.setAdapter(tvShowsAdapter);
-
-
                 }
+                rv_tvShows.setLayoutManager(layoutManager);
+                rv_tvShows.setAdapter(tvShowsAdapter);
                 return true;
             }
         });
@@ -107,10 +108,6 @@ public class TvShowsFragment extends Fragment {
     private void getData() {
         if(isNetworkAvailable()){
             progressBar.setVisibility(View.VISIBLE);
-            rv_tvShows.setVisibility(View.GONE);
-            tv_internet.setVisibility(View.GONE);
-            btn_retry.setVisibility(View.GONE);
-            searchView.setVisibility(View.GONE);
 
             Call<TvShowsResponse> tvShow = ApiConfig.getApiService().getTvShows("2ee1c153c74e27879c557e354c5163c4", 1);
             tvShow.enqueue(new Callback<TvShowsResponse>() {
@@ -170,8 +167,6 @@ public class TvShowsFragment extends Fragment {
     private void showRetryButton() {
         tv_internet.setVisibility(View.VISIBLE);
         btn_retry.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.GONE);
-        searchView.setVisibility(View.GONE);
 
         btn_retry.setOnClickListener(view -> {
             tv_internet.setVisibility(View.GONE);
