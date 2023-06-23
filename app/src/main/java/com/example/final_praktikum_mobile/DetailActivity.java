@@ -25,7 +25,7 @@ public class DetailActivity extends AppCompatActivity {
     private TextView tv_title, tv_releaseDate, tv_rating, tv_synopsis, tv_popularity, tv_language;
     private ImageView iv_poster, iv_backdrop ,iv_movieOrTv;
     private ImageButton btn_back, btn_fav;
-
+    private boolean isFavorite;
     MovieModel singleMovie;
     TvShowsModel singleTvShows;
 
@@ -58,7 +58,7 @@ public class DetailActivity extends AppCompatActivity {
         int movie_id = getIntent().getIntExtra(EXTRA_MOVIE, 0);
         int tvShows_id = getIntent().getIntExtra(EXTRA_TVSHOWS, 0);
 
-        boolean isFavorite = dbHelper.isFavorite(movie_id, tvShows_id);
+        isFavorite = dbHelper.isFavorite(movie_id, tvShows_id);
         setFavoriteStatus(isFavorite);
 
         SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -130,26 +130,26 @@ public class DetailActivity extends AppCompatActivity {
                 if (movie_id != 0) {
                     dbHelper.addMovieToFavorites(singleMovie);
                     Toast.makeText(DetailActivity.this, singleMovie.getTitle()+" ditambahkan ke favorit", Toast.LENGTH_SHORT).show();
-                    setFavoriteStatus(true);
+                    isFavorite = true;
                 } else if (tvShows_id != 0) {
                     dbHelper.addTvShowToFavorites(singleTvShows);
                     Toast.makeText(DetailActivity.this, singleTvShows.getName()+" ditambahkan ke favorit", Toast.LENGTH_SHORT).show();
-                    setFavoriteStatus(true);
+                    isFavorite = true;
                 }
+                setFavoriteStatus(isFavorite);
 
 
             } else {
                 if (movie_id != 0) {
                     dbHelper.removeFromFavoritesById(movie_id);
                     Toast.makeText(DetailActivity.this, singleMovie.getTitle()+" dihapus dari favorit", Toast.LENGTH_SHORT).show();
-
-                    setFavoriteStatus(false);
+                    isFavorite = false;
                 } else if (tvShows_id != 0) {
                     dbHelper.removeFromFavoritesById(tvShows_id);
                     Toast.makeText(DetailActivity.this, singleTvShows.getName()+" dihapus dari favorit", Toast.LENGTH_SHORT).show();
-
-                    setFavoriteStatus(false);
+                    isFavorite = false;
                 }
+                setFavoriteStatus(isFavorite);
 
             }
 
